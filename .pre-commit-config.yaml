@@ -1,0 +1,46 @@
+---
+repos:
+- repo: meta
+  hooks:
+  - id: check-hooks-apply
+
+- repo: https://github.com/asottile/pyupgrade
+  rev: v2.19.0
+  hooks:
+  - id: pyupgrade
+    args: ["--py39-plus"]
+
+- repo: local
+  hooks:
+  - id: isort
+    name: isort
+    entry: isort
+    args: ['--filter-files']
+    language: system
+    require_serial: true
+    types: [python]
+
+  - id: black
+    name: black
+    entry: black
+    language: system
+    require_serial: true
+    types: [python]
+
+  - id: codespell
+    name: codespell
+    entry: codespell
+    language: python
+    types: [text]
+
+  - id: flynt
+    name: flynt
+    entry: flynt
+    language: python
+    types: [python]
+
+  - id: pytest
+    name: pytest
+    entry: pytest
+    language: python
+    types: [python]

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pynamodb-encoder"
 version = "0.1.0"
-description = ""
+description = "Helper classes that encode/decode pynamodb models to/from JSON serializable dict"
 authors = ["Lin Yang <github@linyang.me>"]
 
 [tool.poetry.dependencies]
@@ -9,7 +9,12 @@ python = "^3.9"
 pynamodb = "^5.1.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+black = "^21.11b1"
+flynt = "^0.69"
+isort = "^5.10.1"
+pytest = "^6.2"
+pytest-cov = "^3.0.0"
+codespell = "^2.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
