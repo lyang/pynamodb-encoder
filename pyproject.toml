@@ -6,6 +6,7 @@ authors = ["Lin Yang <github@linyang.me>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+pynamodb = "^5.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
