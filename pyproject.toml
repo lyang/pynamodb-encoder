@@ -1,3 +1,27 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+
+[tool.coverage.html]
+directory = "tests/reports/coverage"
+
+[tool.coverage.report]
+fail_under = 100
+
+[tool.coverage.run]
+branch = true
+data_file = "tests/reports/coverage/data"
+
+[tool.coverage.xml]
+output = "tests/reports/coverage/cobertura.xml"
+
+[tool.isort]
+profile = "black"
+src_paths = ["pynamodb_encoder"]
+
 [tool.poetry]
 name = "pynamodb-encoder"
 version = "0.1.0"
@@ -10,12 +34,18 @@ pynamodb = "^5.1.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.11b1"
+coverage = {extras = ["toml"], version = "^6.2"}
 flake8 = "^4.0.1"
 isort = "^5.10.1"
 pyright = "^0.0.13"
 pytest = "^6.2"
 pytest-cov = "^3.0.0"
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.pytest.ini_options]
+addopts = [
+  "--cov-report=html",
+  "--cov-report=term",
+  "--cov-report=xml",
+  "--cov=pynamodb_encoder",
+  "--junitxml=tests/reports/junit.xml",
+]
