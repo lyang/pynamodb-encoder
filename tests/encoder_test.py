@@ -126,3 +126,20 @@ def test_encode_polymorphic_attribute(encoder):
 
     dog = Dog(breed="Terrier")
     assert encoder.encode(dog) == {"cls": "Dog", "breed": "Terrier"}
+
+
+def test_encode_polymorphic_model(encoder):
+    class Pet(Model):
+        cls = DiscriminatorAttribute()
+
+    class Cat(Pet, discriminator="Cat"):
+        name = UnicodeAttribute()
+
+    class Dog(Pet, discriminator="Dog"):
+        breed = UnicodeAttribute()
+
+    cat = Cat(name="Garfield")
+    assert encoder.encode(cat) == {"cls": "Cat", "name": "Garfield"}
+
+    dog = Dog(breed="Terrier")
+    assert encoder.encode(dog) == {"cls": "Dog", "breed": "Terrier"}
