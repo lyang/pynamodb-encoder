@@ -2,6 +2,7 @@ import pytest
 from pynamodb.attributes import (
     BinaryAttribute,
     ListAttribute,
+    MapAttribute,
     NumberAttribute,
     UnicodeAttribute,
 )
@@ -55,3 +56,14 @@ def test_encode_list_attribute(encoder):
     pet = Pet(name="Garfield", age=43, likes=["lasagna"])
 
     assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "likes": ["lasagna"]}
+
+
+def test_encode_map_attribute(encoder):
+    class Pet(Model):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+        tags = MapAttribute()
+
+    pet = Pet(name="Garfield", age=43, tags={"breed": "Tabby"})
+
+    assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "tags": {"breed": "Tabby"}}

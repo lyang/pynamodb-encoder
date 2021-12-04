@@ -5,6 +5,7 @@ from pynamodb.attributes import (
     AttributeContainer,
     BinaryAttribute,
     BinarySetAttribute,
+    MapAttribute,
 )
 from pynamodb.models import Model
 
@@ -24,5 +25,7 @@ class Encoder:
     def encode_attribute(self, attr: Attribute, data: Any) -> Union[int, float, bool, str, dict]:
         if isinstance(attr, (BinaryAttribute, BinarySetAttribute)):
             return attr.serialize(data)
+        elif isinstance(attr, MapAttribute):
+            return {name: data[name] for name in data}
         else:
             return data
