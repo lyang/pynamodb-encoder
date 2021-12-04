@@ -18,12 +18,12 @@ class Encoder:
         return self.encode_attributes(instance)
 
     def encode_attributes(self, container: AttributeContainer) -> dict[str, Any]:
-        attributes = {}
+        encoded = {}
         for name, attr in container.get_attributes().items():
             value = getattr(container, name)
             if value:
-                attributes[name] = self.encode_attribute(attr, value)
-        return attributes
+                encoded[name] = self.encode_attribute(attr, value)
+        return encoded
 
     def encode_attribute(self, attr: Attribute, data: Any) -> Union[int, float, bool, str, list, dict]:
         if isinstance(attr, (BinaryAttribute, BinarySetAttribute)):
@@ -47,14 +47,14 @@ class Encoder:
         if type(attr) == MapAttribute:
             return {name: data[name] for name in data}
         elif isinstance(attr, DynamicMapAttribute):
-            merged = {}
+            encoded = {}
             attributes = attr.get_attributes()
             for name in data:
                 value = getattr(data, name)
                 if name in attributes:
-                    merged[name] = self.encode_attribute(attributes[name], value)
+                    encoded[name] = self.encode_attribute(attributes[name], value)
                 else:
-                    merged[name] = value
-            return merged
+                    encoded[name] = value
+            return encoded
         else:
             return self.encode_attributes(data)
