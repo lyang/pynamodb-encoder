@@ -70,6 +70,21 @@ def test_encode_map_attribute(encoder):
     assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "tags": {"breed": "Tabby"}}
 
 
+def test_encode_custom_map_attribute(encoder):
+    class Human(MapAttribute):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+
+    class Pet(Model):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+        owner = Human()
+
+    pet = Pet(name="Garfield", age=43, owner=Human(name="Jon", age=70))
+
+    assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "owner": {"name": "Jon", "age": 70}}
+
+
 def test_encode_dynamic_map_attribute(encoder):
     class Human(DynamicMapAttribute):
         name = UnicodeAttribute()
