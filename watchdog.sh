@@ -39,7 +39,6 @@ on-file-change() {
 }
 
 filter-change() {
-  echo "Filtering changes for $1"
   case $1 in
     $SELF)
       triggers+=(0-update-self)
