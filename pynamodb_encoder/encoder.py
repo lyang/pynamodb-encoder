@@ -5,6 +5,7 @@ from pynamodb.attributes import (
     AttributeContainer,
     BinaryAttribute,
     BinarySetAttribute,
+    DiscriminatorAttribute,
     ListAttribute,
     MapAttribute,
 )
@@ -26,10 +27,12 @@ class Encoder:
     def encode_attribute(self, attr: Attribute, data: Any) -> Union[int, float, bool, str, list, dict]:
         if isinstance(attr, (BinaryAttribute, BinarySetAttribute)):
             return attr.serialize(data)
-        elif isinstance(attr, MapAttribute):
-            return {name: data[name] for name in data}
+        elif isinstance(attr, DiscriminatorAttribute):
+            return str(attr.get_discriminator(data))
         elif isinstance(attr, ListAttribute):
             return self.encode_list(attr, data)
+        elif isinstance(attr, MapAttribute):
+            return {name: data[name] for name in data}
         else:
             return data
 
