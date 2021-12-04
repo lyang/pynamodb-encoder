@@ -1,6 +1,7 @@
 import pytest
 from pynamodb.attributes import (
     BinaryAttribute,
+    DynamicMapAttribute,
     ListAttribute,
     MapAttribute,
     NumberAttribute,
@@ -67,6 +68,20 @@ def test_encode_map_attribute(encoder):
     pet = Pet(name="Garfield", age=43, tags={"breed": "Tabby"})
 
     assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "tags": {"breed": "Tabby"}}
+
+
+def test_encode_dynamic_map_attribute(encoder):
+    class Human(DynamicMapAttribute):
+        name = UnicodeAttribute()
+
+    class Pet(Model):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+        owner = Human()
+
+    pet = Pet(name="Garfield", age=43, owner=Human(name="Jon", occupation="Cartoonist"))
+
+    assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "owner": {"name": "Jon", "occupation": "Cartoonist"}}
 
 
 def test_encode_typed_list_attribute(encoder):
