@@ -16,7 +16,9 @@ class Encoder:
     def encode_attributes(self, container: AttributeContainer) -> dict[str, Any]:
         attributes = {}
         for name, attr in container.get_attributes().items():
-            attributes[name] = self.encode_attribute(attr, getattr(container, name))
+            value = getattr(container, name)
+            if value:
+                attributes[name] = self.encode_attribute(attr, value)
         return attributes
 
     def encode_attribute(self, attr: Attribute, data: Any) -> Union[int, float, bool, str, dict]:
