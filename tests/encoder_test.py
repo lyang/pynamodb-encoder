@@ -67,3 +67,14 @@ def test_encode_map_attribute(encoder):
     pet = Pet(name="Garfield", age=43, tags={"breed": "Tabby"})
 
     assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "tags": {"breed": "Tabby"}}
+
+
+def test_encode_typed_list_attribute(encoder):
+    class Pet(Model):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+        pets = ListAttribute(of=MapAttribute)
+
+    pet = Pet(name="Garfield", age=43, pets=[MapAttribute(name="Pooky")])
+
+    assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "pets": [{"name": "Pooky"}]}
