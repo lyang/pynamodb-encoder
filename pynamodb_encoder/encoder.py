@@ -6,6 +6,7 @@ from pynamodb.attributes import (
     BinaryAttribute,
     BinarySetAttribute,
     DiscriminatorAttribute,
+    DynamicMapAttribute,
     ListAttribute,
     MapAttribute,
 )
@@ -32,7 +33,7 @@ class Encoder:
         elif isinstance(attr, ListAttribute):
             return self.encode_list(attr, data)
         elif isinstance(attr, MapAttribute):
-            return {name: data[name] for name in data}
+            return self.encode_map(attr, data)
         else:
             return data
 
@@ -41,3 +42,19 @@ class Encoder:
 
     def coerce(self, element_type: Union[Type[Attribute], None]) -> Attribute:
         return (element_type or Attribute)()
+
+    def encode_map(self, attr: MapAttribute, data: MapAttribute) -> dict:
+        if type(attr) == MapAttribute:
+            return {name: data[name] for name in data}
+        elif isinstance(attr, DynamicMapAttribute):
+            merged = {}
+            attributes = attr.get_attributes()
+            for name in data:
+                value = getattr(data, name)
+                if name in attributes:
+                    merged[name] = self.encode_attribute(attributes[name], value)
+                else:
+                    merged[name] = value
+            return merged
+        else:
+            return self.encode_attributes(data)

@@ -143,3 +143,25 @@ def test_encode_polymorphic_model(encoder):
 
     dog = Dog(breed="Terrier")
     assert encoder.encode(dog) == {"cls": "Dog", "breed": "Terrier"}
+
+
+def test_encode_complex_model(encoder):
+    class Pet(DynamicMapAttribute):
+        cls = DiscriminatorAttribute()
+        name = UnicodeAttribute()
+
+    class Cat(Pet, discriminator="Cat"):
+        pass
+
+    class Dog(Pet, discriminator="Dog"):
+        pass
+
+    class Human(MapAttribute):
+        name = UnicodeAttribute()
+        pets = ListAttribute(of=Pet)
+
+    jon = Human(name="Jon", pets=[Cat(name="Garfield", age=43), Dog(name="Odie")])
+    assert encoder.encode(jon) == {
+        "name": "Jon",
+        "pets": [{"cls": "Cat", "name": "Garfield", "age": 43}, {"cls": "Dog", "name": "Odie"}],
+    }
