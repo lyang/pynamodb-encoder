@@ -1,5 +1,5 @@
 import pytest
-from pynamodb.attributes import NumberAttribute, UnicodeAttribute
+from pynamodb.attributes import BinaryAttribute, NumberAttribute, UnicodeAttribute
 from pynamodb.models import Model
 
 from pynamodb_encoder.encoder import Encoder
@@ -18,3 +18,14 @@ def test_encode_simple_model(encoder):
     pet = Pet(name="Garfield", age=43)
 
     assert encoder.encode(pet) == {"name": "Garfield", "age": 43}
+
+
+def test_encode_binary_attribute(encoder):
+    class Pet(Model):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+        weight = BinaryAttribute()
+
+    pet = Pet(name="Garfield", age=43, weight=bytes([40]))
+
+    assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "weight": "KA=="}

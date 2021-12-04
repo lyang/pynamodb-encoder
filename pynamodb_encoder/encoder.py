@@ -1,6 +1,11 @@
-from typing import Any
+from typing import Any, Union
 
-from pynamodb.attributes import AttributeContainer
+from pynamodb.attributes import (
+    Attribute,
+    AttributeContainer,
+    BinaryAttribute,
+    BinarySetAttribute,
+)
 from pynamodb.models import Model
 
 
@@ -9,4 +14,13 @@ class Encoder:
         return self.encode_attributes(instance)
 
     def encode_attributes(self, container: AttributeContainer) -> dict[str, Any]:
-        return {name: getattr(container, name) for name in container.get_attributes()}
+        attributes = {}
+        for name, attr in container.get_attributes().items():
+            attributes[name] = self.encode_attribute(attr, getattr(container, name))
+        return attributes
+
+    def encode_attribute(self, attr: Attribute, data: Any) -> Union[int, float, bool, str, dict]:
+        if isinstance(attr, (BinaryAttribute, BinarySetAttribute)):
+            return attr.serialize(data)
+        else:
+            return data
