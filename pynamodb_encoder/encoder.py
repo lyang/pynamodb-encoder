@@ -11,6 +11,7 @@ from pynamodb.attributes import (
     ListAttribute,
     MapAttribute,
     TTLAttribute,
+    UTCDateTimeAttribute,
 )
 from pynamodb.models import Model
 
@@ -32,6 +33,8 @@ class Encoder:
             return attr.serialize(data)
         elif isinstance(attr, TTLAttribute):
             return data.timestamp()
+        elif isinstance(attr, UTCDateTimeAttribute):
+            return data.isoformat()
         elif isinstance(attr, ListAttribute):
             return self.encode_list(attr, data)
         elif isinstance(attr, MapAttribute):

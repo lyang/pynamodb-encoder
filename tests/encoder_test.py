@@ -217,6 +217,6 @@ def test_encode_all_primitive_types(encoder):
         "ttl": now.replace(microsecond=0).timestamp(),
         "unicode": "foo",
         "unicode_set": ["foo"],
-        "utc_datetime": now,
+        "utc_datetime": now.isoformat(),
         "version": 1,
     }

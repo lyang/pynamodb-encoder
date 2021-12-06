@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Any, Type, TypeVar, Union
 
 from pynamodb.attributes import (
@@ -13,6 +14,7 @@ from pynamodb.attributes import (
     NumberSetAttribute,
     TTLAttribute,
     UnicodeSetAttribute,
+    UTCDateTimeAttribute,
 )
 from pynamodb.models import Model
 
@@ -36,7 +38,9 @@ class Decoder:
         if isinstance(attr, (BinaryAttribute, BinarySetAttribute, JSONAttribute)):
             return attr.deserialize(data)
         elif isinstance(attr, TTLAttribute):
-            return attr.deserialize(str(data))
+            return datetime.fromtimestamp(data, tz=timezone.utc)
+        elif isinstance(attr, UTCDateTimeAttribute):
+            return datetime.fromisoformat(data)
         elif isinstance(attr, (NumberSetAttribute, UnicodeSetAttribute)):
             return set(data)
         elif isinstance(attr, ListAttribute):
