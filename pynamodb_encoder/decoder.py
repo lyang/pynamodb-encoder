@@ -4,10 +4,14 @@ from pynamodb.attributes import (
     Attribute,
     AttributeContainer,
     BinaryAttribute,
+    BinarySetAttribute,
     DiscriminatorAttribute,
     DynamicMapAttribute,
+    JSONAttribute,
     ListAttribute,
     MapAttribute,
+    NumberSetAttribute,
+    UnicodeSetAttribute,
 )
 from pynamodb.models import Model
 
@@ -28,8 +32,10 @@ class Decoder:
         return cls(**attributes)
 
     def decode_attribute(self, attr: Attribute, data):
-        if isinstance(attr, BinaryAttribute):
+        if isinstance(attr, (BinaryAttribute, BinarySetAttribute, JSONAttribute)):
             return attr.deserialize(data)
+        elif isinstance(attr, (NumberSetAttribute, UnicodeSetAttribute)):
+            return set(data)
         elif isinstance(attr, ListAttribute):
             return self.decode_list(attr, data)
         elif isinstance(attr, MapAttribute):

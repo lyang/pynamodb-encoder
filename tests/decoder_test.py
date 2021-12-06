@@ -1,12 +1,23 @@
+import json
+from datetime import datetime, timezone
+
 import pytest
 from pynamodb.attributes import (
     BinaryAttribute,
+    BinarySetAttribute,
+    BooleanAttribute,
     DiscriminatorAttribute,
     DynamicMapAttribute,
+    JSONAttribute,
     ListAttribute,
     MapAttribute,
     NumberAttribute,
+    NumberSetAttribute,
+    TTLAttribute,
     UnicodeAttribute,
+    UnicodeSetAttribute,
+    UTCDateTimeAttribute,
+    VersionAttribute,
 )
 from pynamodb.models import Model
 
@@ -209,3 +220,49 @@ def test_decode_complex_model(decoder: Decoder):
     assert jon.pets[0].name == "Garfield"
     assert isinstance(jon.pets[1], Dog)
     assert jon.pets[1].breed == "Terrier"
+
+
+def test_decode_all_primitive_types(decoder: Decoder):
+    class Foo(Model):
+        binary = BinaryAttribute()
+        binary_set = BinarySetAttribute()
+        boolean = BooleanAttribute()
+        json = JSONAttribute()
+        number = NumberAttribute()
+        number_set = NumberSetAttribute()
+        ttl = TTLAttribute()
+        unicode = UnicodeAttribute()
+        unicode_set = UnicodeSetAttribute()
+        utc_datetime = UTCDateTimeAttribute()
+        version = VersionAttribute()
+
+    now = datetime.now(tz=timezone.utc)
+
+    foo = decoder.decode(
+        Foo,
+        {
+            "binary": "AA==",
+            "binary_set": ["AA=="],
+            "boolean": True,
+            "json": json.dumps({"key": "value"}),
+            "number": 1,
+            "number_set": [1],
+            "ttl": now.replace(microsecond=0),
+            "unicode": "foo",
+            "unicode_set": ["foo"],
+            "utc_datetime": now,
+            "version": 1,
+        },
+    )
+
+    assert foo.binary == bytes([0])
+    assert foo.binary_set == {bytes([0])}
+    assert foo.boolean
+    assert foo.json == {"key": "value"}
+    assert foo.number == 1
+    assert foo.number_set == {1}
+    assert foo.ttl == now.replace(microsecond=0)
+    assert foo.unicode == "foo"
+    assert foo.unicode_set == {"foo"}
+    assert foo.utc_datetime == now
+    assert foo.version == 1
