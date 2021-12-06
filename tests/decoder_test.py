@@ -1,6 +1,7 @@
 import pytest
 from pynamodb.attributes import (
     BinaryAttribute,
+    DiscriminatorAttribute,
     DynamicMapAttribute,
     ListAttribute,
     MapAttribute,
@@ -134,3 +135,33 @@ def test_decode_typed_list_attribute(decoder):
     assert len(jon.pets) == 1
     assert isinstance(jon.pets[0], Pet)
     assert jon.pets[0]["name"] == "Garfield"
+
+
+def test_decode_polymorphic_attribute(decoder):
+    class Pet(MapAttribute):
+        cls = DiscriminatorAttribute()
+
+    class Cat(Pet, discriminator="Cat"):
+        name = UnicodeAttribute()
+
+    class Dog(Pet, discriminator="Dog"):
+        breed = UnicodeAttribute()
+
+    class Human(DynamicMapAttribute):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+        pets = ListAttribute(of=Pet)
+
+    jon = decoder.decode(
+        Human,
+        {"name": "Jon", "age": 70, "pets": [{"cls": "Cat", "name": "Garfield"}, {"cls": "Dog", "breed": "Terrier"}]},
+    )
+
+    assert jon.name == "Jon"
+    assert jon.age == 70
+    assert isinstance(jon.pets, list)
+    assert len(jon.pets) == 2
+    assert isinstance(jon.pets[0], Cat)
+    assert jon.pets[0].name == "Garfield"
+    assert isinstance(jon.pets[1], Dog)
+    assert jon.pets[1].breed == "Terrier"

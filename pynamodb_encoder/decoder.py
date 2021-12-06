@@ -4,6 +4,7 @@ from pynamodb.attributes import (
     Attribute,
     AttributeContainer,
     BinaryAttribute,
+    DiscriminatorAttribute,
     DynamicMapAttribute,
     ListAttribute,
     MapAttribute,
@@ -13,8 +14,9 @@ AC = TypeVar("AC", bound=AttributeContainer)
 
 
 class Decoder:
-    def decode(self, cls: Type[AC], data: dict[str, Any]) -> AC:
+    def decode(self, type: Type[AC], data: dict[str, Any]) -> AC:
         attributes = {}
+        cls = self.polymorphisize(type, data)
         for name, attr in cls.get_attributes().items():
             if name in data:
                 attributes[name] = self.decode_attribute(attr, data[name])
@@ -41,12 +43,19 @@ class Decoder:
             return data
         elif isinstance(attr, DynamicMapAttribute):
             decoded = {}
+            cls = self.polymorphisize(type(attr), data)
             attributes = attr.get_attributes()
             for name, value in data.items():
                 if name in attributes:
                     decoded[name] = self.decode_attribute(attributes[name], value)
                 else:
                     decoded[name] = value
-            return decoded
+            return cls(**decoded)
         else:
             return self.decode(type(attr), data)
+
+    def polymorphisize(self, instance_type: Type[AC], data: dict[str, Any]) -> Type[AC]:
+        for name, attr in instance_type.get_attributes().items():
+            if isinstance(attr, DiscriminatorAttribute):
+                return attr.deserialize(data.pop(name))
+        return instance_type
