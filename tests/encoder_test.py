@@ -214,7 +214,7 @@ def test_encode_all_primitive_types(encoder):
         "json": json.dumps({"key": "value"}),
         "number": 1,
         "number_set": [1],
-        "ttl": now.replace(microsecond=0),
+        "ttl": now.replace(microsecond=0).timestamp(),
         "unicode": "foo",
         "unicode_set": ["foo"],
         "utc_datetime": now,

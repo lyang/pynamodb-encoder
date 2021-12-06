@@ -11,6 +11,7 @@ from pynamodb.attributes import (
     ListAttribute,
     MapAttribute,
     NumberSetAttribute,
+    TTLAttribute,
     UnicodeSetAttribute,
 )
 from pynamodb.models import Model
@@ -34,6 +35,8 @@ class Decoder:
     def decode_attribute(self, attr: Attribute, data):
         if isinstance(attr, (BinaryAttribute, BinarySetAttribute, JSONAttribute)):
             return attr.deserialize(data)
+        elif isinstance(attr, TTLAttribute):
+            return attr.deserialize(str(data))
         elif isinstance(attr, (NumberSetAttribute, UnicodeSetAttribute)):
             return set(data)
         elif isinstance(attr, ListAttribute):

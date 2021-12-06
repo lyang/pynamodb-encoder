@@ -10,6 +10,7 @@ from pynamodb.attributes import (
     JSONAttribute,
     ListAttribute,
     MapAttribute,
+    TTLAttribute,
 )
 from pynamodb.models import Model
 
@@ -29,6 +30,8 @@ class Encoder:
     def encode_attribute(self, attr: Attribute, data: Any):
         if isinstance(attr, (BinaryAttribute, BinarySetAttribute, DiscriminatorAttribute, JSONAttribute)):
             return attr.serialize(data)
+        elif isinstance(attr, TTLAttribute):
+            return data.timestamp()
         elif isinstance(attr, ListAttribute):
             return self.encode_list(attr, data)
         elif isinstance(attr, MapAttribute):
