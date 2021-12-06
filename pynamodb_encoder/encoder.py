@@ -26,7 +26,7 @@ class Encoder:
                 encoded[name] = self.encode_attribute(attr, value)
         return encoded
 
-    def encode_attribute(self, attr: Attribute, data: Any) -> Union[int, float, bool, str, list, dict]:
+    def encode_attribute(self, attr: Attribute, data: Any):
         if isinstance(attr, (BinaryAttribute, BinarySetAttribute, DiscriminatorAttribute, JSONAttribute)):
             return attr.serialize(data)
         elif isinstance(attr, ListAttribute):
