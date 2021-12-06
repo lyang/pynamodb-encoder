@@ -9,12 +9,17 @@ from pynamodb.attributes import (
     ListAttribute,
     MapAttribute,
 )
+from pynamodb.models import Model
 
 AC = TypeVar("AC", bound=AttributeContainer)
+M = TypeVar("M", bound=Model)
 
 
 class Decoder:
-    def decode(self, type: Type[AC], data: dict[str, Any]) -> AC:
+    def decode(self, type: Type[M], data: dict[str, Any]) -> M:
+        return self.decode_container(type, data)
+
+    def decode_container(self, type: Type[AC], data: dict[str, Any]) -> AC:
         attributes = {}
         cls = self.polymorphisize(type, data)
         for name, attr in cls.get_attributes().items():
@@ -52,7 +57,7 @@ class Decoder:
                     decoded[name] = value
             return cls(**decoded)
         else:
-            return self.decode(type(attr), data)
+            return self.decode_container(type(attr), data)
 
     def polymorphisize(self, instance_type: Type[AC], data: dict[str, Any]) -> Type[AC]:
         for name, attr in instance_type.get_attributes().items():

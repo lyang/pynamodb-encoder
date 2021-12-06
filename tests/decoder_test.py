@@ -18,7 +18,7 @@ def decoder() -> Decoder:
     return Decoder()
 
 
-def test_decode_simple_model(decoder):
+def test_decode_simple_model(decoder: Decoder):
     class Pet(Model):
         name = UnicodeAttribute()
         age = NumberAttribute()
@@ -29,7 +29,7 @@ def test_decode_simple_model(decoder):
     assert pet.age == 43
 
 
-def test_decode_skip_none_attribute(decoder):
+def test_decode_skip_none_attribute(decoder: Decoder):
     class Pet(Model):
         name = UnicodeAttribute()
         age = NumberAttribute()
@@ -39,7 +39,7 @@ def test_decode_skip_none_attribute(decoder):
     assert pet.age is None
 
 
-def test_decode_binary_attribute(decoder):
+def test_decode_binary_attribute(decoder: Decoder):
     class Pet(Model):
         name = UnicodeAttribute()
         age = NumberAttribute()
@@ -51,7 +51,7 @@ def test_decode_binary_attribute(decoder):
     assert pet.weight == bytes([40])
 
 
-def test_decode_list_attribute(decoder):
+def test_decode_list_attribute(decoder: Decoder):
     class Pet(Model):
         name = UnicodeAttribute()
         age = NumberAttribute()
@@ -64,7 +64,7 @@ def test_decode_list_attribute(decoder):
     assert pet.likes == ["lasagna"]
 
 
-def test_decode_map_attribute(decoder):
+def test_decode_map_attribute(decoder: Decoder):
     class Pet(Model):
         name = UnicodeAttribute()
         age = NumberAttribute()
@@ -78,7 +78,7 @@ def test_decode_map_attribute(decoder):
     assert pet.tags["breed"] == "Tabby"
 
 
-def test_decode_custom_map_attribute(decoder):
+def test_decode_custom_map_attribute(decoder: Decoder):
     class Human(MapAttribute):
         name = UnicodeAttribute()
         age = NumberAttribute()
@@ -97,7 +97,7 @@ def test_decode_custom_map_attribute(decoder):
     assert pet.owner["age"] == 70
 
 
-def test_decode_dynamic_map_attribute(decoder):
+def test_decode_dynamic_map_attribute(decoder: Decoder):
     class Human(DynamicMapAttribute):
         name = UnicodeAttribute()
         age = NumberAttribute()
@@ -117,12 +117,12 @@ def test_decode_dynamic_map_attribute(decoder):
     assert pet.owner["job"] == "Cartoonist"
 
 
-def test_decode_typed_list_attribute(decoder):
+def test_decode_typed_list_attribute(decoder: Decoder):
     class Pet(MapAttribute):
         name = UnicodeAttribute()
         age = NumberAttribute()
 
-    class Human(DynamicMapAttribute):
+    class Human(Model):
         name = UnicodeAttribute()
         age = NumberAttribute()
         pets = ListAttribute(of=Pet)
@@ -137,7 +137,7 @@ def test_decode_typed_list_attribute(decoder):
     assert jon.pets[0]["name"] == "Garfield"
 
 
-def test_decode_polymorphic_attribute(decoder):
+def test_decode_polymorphic_attribute(decoder: Decoder):
     class Pet(MapAttribute):
         cls = DiscriminatorAttribute()
 
@@ -147,27 +147,17 @@ def test_decode_polymorphic_attribute(decoder):
     class Dog(Pet, discriminator="Dog"):
         breed = UnicodeAttribute()
 
-    class Human(DynamicMapAttribute):
-        name = UnicodeAttribute()
-        age = NumberAttribute()
-        pets = ListAttribute(of=Pet)
+    cat = decoder.decode_container(Pet, {"cls": "Cat", "name": "Garfield"})
 
-    jon = decoder.decode(
-        Human,
-        {"name": "Jon", "age": 70, "pets": [{"cls": "Cat", "name": "Garfield"}, {"cls": "Dog", "breed": "Terrier"}]},
-    )
+    assert isinstance(cat, Cat)
+    assert cat.name == "Garfield"
 
-    assert jon.name == "Jon"
-    assert jon.age == 70
-    assert isinstance(jon.pets, list)
-    assert len(jon.pets) == 2
-    assert isinstance(jon.pets[0], Cat)
-    assert jon.pets[0].name == "Garfield"
-    assert isinstance(jon.pets[1], Dog)
-    assert jon.pets[1].breed == "Terrier"
+    dog = decoder.decode_container(Pet, {"cls": "Dog", "breed": "Terrier"})
+    assert isinstance(dog, Dog)
+    assert dog.breed == "Terrier"
 
 
-def test_decode_polymorphic_models(decoder):
+def test_decode_polymorphic_model(decoder: Decoder):
     class Pet(Model):
         cls = DiscriminatorAttribute()
 
@@ -185,3 +175,37 @@ def test_decode_polymorphic_models(decoder):
     dog = decoder.decode(Pet, {"cls": "Dog", "breed": "Terrier"})
     assert isinstance(dog, Dog)
     assert dog.breed == "Terrier"
+
+
+def test_decode_complex_model(decoder: Decoder):
+    class Pet(DynamicMapAttribute):
+        cls = DiscriminatorAttribute()
+
+    class Cat(Pet, discriminator="Cat"):
+        name = UnicodeAttribute()
+
+    class Dog(Pet, discriminator="Dog"):
+        breed = UnicodeAttribute()
+
+    class Human(Model):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+        pets = ListAttribute(of=Pet)
+
+    jon = decoder.decode(
+        Human,
+        {
+            "name": "Jon",
+            "age": 70,
+            "pets": [{"cls": "Cat", "name": "Garfield"}, {"cls": "Dog", "breed": "Terrier"}],
+        },
+    )
+
+    assert jon.name == "Jon"
+    assert jon.age == 70
+    assert isinstance(jon.pets, list)
+    assert len(jon.pets) == 2
+    assert isinstance(jon.pets[0], Cat)
+    assert jon.pets[0].name == "Garfield"
+    assert isinstance(jon.pets[1], Dog)
+    assert jon.pets[1].breed == "Terrier"
