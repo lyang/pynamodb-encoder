@@ -19,3 +19,13 @@ def test_decode_simple_model(decoder):
 
     assert pet.name == "Garfield"
     assert pet.age == 43
+
+
+def test_decode_skip_none_attribute(decoder):
+    class Pet(Model):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+
+    pet = decoder.decode(Pet, {"name": "Garfield"})
+    assert pet.name == "Garfield"
+    assert pet.age is None
