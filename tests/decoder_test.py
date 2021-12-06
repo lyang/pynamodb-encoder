@@ -1,6 +1,7 @@
 import pytest
 from pynamodb.attributes import (
     BinaryAttribute,
+    DynamicMapAttribute,
     ListAttribute,
     MapAttribute,
     NumberAttribute,
@@ -93,3 +94,23 @@ def test_decode_custom_map_attribute(decoder):
     assert isinstance(pet.owner, Human)
     assert pet.owner["name"] == "Jon"
     assert pet.owner["age"] == 70
+
+
+def test_decode_dynamic_map_attribute(decoder):
+    class Human(DynamicMapAttribute):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+
+    class Pet(Model):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+        owner = Human()
+
+    pet = decoder.decode(Pet, {"name": "Garfield", "age": 43, "owner": {"name": "Jon", "age": 70, "job": "Cartoonist"}})
+
+    assert pet.name == "Garfield"
+    assert pet.age == 43
+    assert isinstance(pet.owner, Human)
+    assert pet.owner["name"] == "Jon"
+    assert pet.owner["age"] == 70
+    assert pet.owner["job"] == "Cartoonist"

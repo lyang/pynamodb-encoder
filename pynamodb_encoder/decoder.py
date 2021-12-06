@@ -4,6 +4,7 @@ from pynamodb.attributes import (
     Attribute,
     AttributeContainer,
     BinaryAttribute,
+    DynamicMapAttribute,
     MapAttribute,
 )
 
@@ -29,5 +30,14 @@ class Decoder:
     def decode_map(self, attr: MapAttribute, data: dict[str, Any]):
         if type(attr) == MapAttribute:
             return data
+        elif isinstance(attr, DynamicMapAttribute):
+            decoded = {}
+            attributes = attr.get_attributes()
+            for name, value in data.items():
+                if name in attributes:
+                    decoded[name] = self.decode_attribute(attributes[name], value)
+                else:
+                    decoded[name] = value
+            return decoded
         else:
             return self.decode(type(attr), data)
