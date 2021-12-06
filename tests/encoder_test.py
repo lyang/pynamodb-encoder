@@ -1,12 +1,23 @@
+import json
+from datetime import datetime, timezone
+
 import pytest
 from pynamodb.attributes import (
     BinaryAttribute,
+    BinarySetAttribute,
+    BooleanAttribute,
     DiscriminatorAttribute,
     DynamicMapAttribute,
+    JSONAttribute,
     ListAttribute,
     MapAttribute,
     NumberAttribute,
+    NumberSetAttribute,
+    TTLAttribute,
     UnicodeAttribute,
+    UnicodeSetAttribute,
+    UTCDateTimeAttribute,
+    VersionAttribute,
 )
 from pynamodb.models import Model
 
@@ -164,4 +175,48 @@ def test_encode_complex_model(encoder):
     assert encoder.encode(jon) == {
         "name": "Jon",
         "pets": [{"cls": "Cat", "name": "Garfield", "age": 43}, {"cls": "Dog", "name": "Odie"}],
+    }
+
+
+def test_encode_all_primitive_types(encoder):
+    class Foo(Model):
+        binary = BinaryAttribute()
+        binary_set = BinarySetAttribute()
+        boolean = BooleanAttribute()
+        json = JSONAttribute()
+        number = NumberAttribute()
+        number_set = NumberSetAttribute()
+        ttl = TTLAttribute()
+        unicode = UnicodeAttribute()
+        unicode_set = UnicodeSetAttribute()
+        utc_datetime = UTCDateTimeAttribute()
+        version = VersionAttribute()
+
+    now = datetime.now(tz=timezone.utc)
+    foo = Foo(
+        binary=bytes([0]),
+        binary_set=[bytes([0])],
+        boolean=True,
+        json={"key": "value"},
+        number=1,
+        number_set=[1],
+        ttl=now,
+        unicode="foo",
+        unicode_set=["foo"],
+        utc_datetime=now,
+        version=1,
+    )
+
+    assert encoder.encode(foo) == {
+        "binary": "AA==",
+        "binary_set": ["AA=="],
+        "boolean": True,
+        "json": json.dumps({"key": "value"}),
+        "number": 1,
+        "number_set": [1],
+        "ttl": now.replace(microsecond=0),
+        "unicode": "foo",
+        "unicode_set": ["foo"],
+        "utc_datetime": now,
+        "version": 1,
     }
