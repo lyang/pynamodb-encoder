@@ -72,4 +72,24 @@ def test_decode_map_attribute(decoder):
 
     assert pet.name == "Garfield"
     assert pet.age == 43
+    assert isinstance(pet.tags, MapAttribute)
     assert pet.tags["breed"] == "Tabby"
+
+
+def test_decode_custom_map_attribute(decoder):
+    class Human(MapAttribute):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+
+    class Pet(Model):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+        owner = Human()
+
+    pet = decoder.decode(Pet, {"name": "Garfield", "age": 43, "owner": {"name": "Jon", "age": 70, "job": "Cartoonist"}})
+
+    assert pet.name == "Garfield"
+    assert pet.age == 43
+    assert isinstance(pet.owner, Human)
+    assert pet.owner["name"] == "Jon"
+    assert pet.owner["age"] == 70

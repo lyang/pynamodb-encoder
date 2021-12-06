@@ -1,6 +1,11 @@
 from typing import Any, Type, TypeVar
 
-from pynamodb.attributes import Attribute, AttributeContainer, BinaryAttribute
+from pynamodb.attributes import (
+    Attribute,
+    AttributeContainer,
+    BinaryAttribute,
+    MapAttribute,
+)
 
 AC = TypeVar("AC", bound=AttributeContainer)
 
@@ -16,5 +21,13 @@ class Decoder:
     def decode_attribute(self, attr: Attribute, data):
         if isinstance(attr, BinaryAttribute):
             return attr.deserialize(data)
+        elif isinstance(attr, MapAttribute):
+            return self.decode_map(attr, data)
         else:
             return data
+
+    def decode_map(self, attr: MapAttribute, data: dict[str, Any]):
+        if type(attr) == MapAttribute:
+            return data
+        else:
+            return self.decode(type(attr), data)
