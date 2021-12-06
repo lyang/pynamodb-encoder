@@ -1,10 +1,11 @@
-from typing import Any, Type, TypeVar
+from typing import Any, Type, TypeVar, Union
 
 from pynamodb.attributes import (
     Attribute,
     AttributeContainer,
     BinaryAttribute,
     DynamicMapAttribute,
+    ListAttribute,
     MapAttribute,
 )
 
@@ -22,10 +23,18 @@ class Decoder:
     def decode_attribute(self, attr: Attribute, data):
         if isinstance(attr, BinaryAttribute):
             return attr.deserialize(data)
+        elif isinstance(attr, ListAttribute):
+            return self.decode_list(attr, data)
         elif isinstance(attr, MapAttribute):
             return self.decode_map(attr, data)
         else:
             return data
+
+    def decode_list(self, attr: ListAttribute, data: list) -> list:
+        return [self.decode_attribute(self.coerce(attr.element_type), value) for value in data]
+
+    def coerce(self, element_type: Union[Type[Attribute], None]) -> Attribute:
+        return (element_type or Attribute)()
 
     def decode_map(self, attr: MapAttribute, data: dict[str, Any]):
         if type(attr) == MapAttribute:

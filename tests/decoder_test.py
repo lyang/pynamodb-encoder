@@ -114,3 +114,23 @@ def test_decode_dynamic_map_attribute(decoder):
     assert pet.owner["name"] == "Jon"
     assert pet.owner["age"] == 70
     assert pet.owner["job"] == "Cartoonist"
+
+
+def test_decode_typed_list_attribute(decoder):
+    class Pet(MapAttribute):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+
+    class Human(DynamicMapAttribute):
+        name = UnicodeAttribute()
+        age = NumberAttribute()
+        pets = ListAttribute(of=Pet)
+
+    jon = decoder.decode(Human, {"name": "Jon", "age": 70, "pets": [{"name": "Garfield", "age": 43}]})
+
+    assert jon.name == "Jon"
+    assert jon.age == 70
+    assert isinstance(jon.pets, list)
+    assert len(jon.pets) == 1
+    assert isinstance(jon.pets[0], Pet)
+    assert jon.pets[0]["name"] == "Garfield"
