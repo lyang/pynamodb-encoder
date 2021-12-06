@@ -165,3 +165,23 @@ def test_decode_polymorphic_attribute(decoder):
     assert jon.pets[0].name == "Garfield"
     assert isinstance(jon.pets[1], Dog)
     assert jon.pets[1].breed == "Terrier"
+
+
+def test_decode_polymorphic_models(decoder):
+    class Pet(Model):
+        cls = DiscriminatorAttribute()
+
+    class Cat(Pet, discriminator="Cat"):
+        name = UnicodeAttribute()
+
+    class Dog(Pet, discriminator="Dog"):
+        breed = UnicodeAttribute()
+
+    cat = decoder.decode(Pet, {"cls": "Cat", "name": "Garfield"})
+
+    assert isinstance(cat, Cat)
+    assert cat.name == "Garfield"
+
+    dog = decoder.decode(Pet, {"cls": "Dog", "breed": "Terrier"})
+    assert isinstance(dog, Dog)
+    assert dog.breed == "Terrier"
