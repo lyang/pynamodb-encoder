@@ -1,0 +1,1 @@
+# pynamodb-encoder ![Build](https://github.com/lyang/pynamodb-encoder/actions/workflows/python-package.yml/badge.svg) ![CodeQL](https://github.com/lyang/pynamodb-encoder/actions/workflows/codeql-analysis.yml/badge.svg)
