@@ -1,1 +1,1 @@
-# pynamodb-encoder ![Build](https://github.com/lyang/pynamodb-encoder/actions/workflows/build.yml/badge.svg) ![CodeQL](https://github.com/lyang/pynamodb-encoder/actions/workflows/codeql-analysis.yml/badge.svg)
+# pynamodb-encoder ![Build](https://github.com/lyang/pynamodb-encoder/actions/workflows/build.yml/badge.svg) ![CodeQL](https://github.com/lyang/pynamodb-encoder/actions/workflows/codeql-analysis.yml/badge.svg) [![codecov](https://codecov.io/gh/lyang/pynamodb-encoder/branch/main/graph/badge.svg?token=P51YVL86N8)](https://codecov.io/gh/lyang/pynamodb-encoder)
