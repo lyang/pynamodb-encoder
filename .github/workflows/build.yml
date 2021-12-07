@@ -24,3 +24,8 @@ jobs:
     - name: Test with tox
       run: |
         tox
+    - name: Report test coverage
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: tests/reports/coverage/cobertura.xml
