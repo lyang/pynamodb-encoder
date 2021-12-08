@@ -1,22 +1,16 @@
-from datetime import datetime, timezone
 from typing import Any, Type, TypeVar, Union
 
 from pynamodb.attributes import (
     Attribute,
     AttributeContainer,
-    BinaryAttribute,
-    BinarySetAttribute,
     DiscriminatorAttribute,
     DynamicMapAttribute,
-    JSONAttribute,
     ListAttribute,
     MapAttribute,
-    NumberSetAttribute,
-    TTLAttribute,
-    UnicodeSetAttribute,
-    UTCDateTimeAttribute,
 )
 from pynamodb.models import Model
+
+from pynamodb_encoder.primitive_attribute_decoder import PrimitiveAttributeDecoder
 
 AC = TypeVar("AC", bound=AttributeContainer)
 M = TypeVar("M", bound=Model)
@@ -35,20 +29,12 @@ class Decoder:
         return cls(**attributes)
 
     def decode_attribute(self, attr: Attribute, data):
-        if isinstance(attr, (BinaryAttribute, BinarySetAttribute, JSONAttribute)):
-            return attr.deserialize(data)
-        elif isinstance(attr, TTLAttribute):
-            return datetime.fromtimestamp(data, tz=timezone.utc)
-        elif isinstance(attr, UTCDateTimeAttribute):
-            return datetime.fromisoformat(data)
-        elif isinstance(attr, (NumberSetAttribute, UnicodeSetAttribute)):
-            return set(data)
-        elif isinstance(attr, ListAttribute):
+        if isinstance(attr, ListAttribute):
             return self.decode_list(attr, data)
         elif isinstance(attr, MapAttribute):
             return self.decode_map(attr, data)
         else:
-            return data
+            return PrimitiveAttributeDecoder.decode(attr, data)
 
     def decode_list(self, attr: ListAttribute, data: list) -> list:
         return [self.decode_attribute(self.coerce(attr.element_type), value) for value in data]
