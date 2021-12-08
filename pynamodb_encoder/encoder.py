@@ -3,17 +3,13 @@ from typing import Any
 from pynamodb.attributes import (
     Attribute,
     AttributeContainer,
-    BinaryAttribute,
-    BinarySetAttribute,
-    DiscriminatorAttribute,
     DynamicMapAttribute,
-    JSONAttribute,
     ListAttribute,
     MapAttribute,
-    TTLAttribute,
-    UTCDateTimeAttribute,
 )
 from pynamodb.models import Model
+
+from pynamodb_encoder.primitive_attribute_encoder import PrimitiveAttributeEncoder
 
 
 class Encoder:
@@ -29,18 +25,12 @@ class Encoder:
         return encoded
 
     def encode_attribute(self, attr: Attribute, data: Any):
-        if isinstance(attr, (BinaryAttribute, BinarySetAttribute, DiscriminatorAttribute, JSONAttribute)):
-            return attr.serialize(data)
-        elif isinstance(attr, TTLAttribute):
-            return data.timestamp()
-        elif isinstance(attr, UTCDateTimeAttribute):
-            return data.isoformat()
-        elif isinstance(attr, ListAttribute):
+        if isinstance(attr, ListAttribute):
             return self.encode_list(attr, data)
         elif isinstance(attr, MapAttribute):
             return self.encode_map(attr, data)
         else:
-            return data
+            return PrimitiveAttributeEncoder.encode(attr, data)
 
     def encode_list(self, attr: ListAttribute, data: list) -> list:
         element_attr = (attr.element_type or Attribute)()
