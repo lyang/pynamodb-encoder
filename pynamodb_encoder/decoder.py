@@ -60,17 +60,20 @@ class Decoder:
         if type(attr) == MapAttribute:
             return data
         elif isinstance(attr, DynamicMapAttribute):
-            decoded = {}
-            cls = self.polymorphisize(type(attr), data)
-            attributes = attr.get_attributes()
-            for name, value in data.items():
-                if name in attributes:
-                    decoded[name] = self.decode_attribute(attributes[name], value)
-                else:
-                    decoded[name] = value
-            return cls(**decoded)
+            return self.decode_dynamic_map(attr, data)
         else:
             return self.decode_container(type(attr), data)
+
+    def decode_dynamic_map(self, attr: DynamicMapAttribute, data: dict[str, Any]):
+        decoded = {}
+        cls = self.polymorphisize(type(attr), data)
+        attributes = attr.get_attributes()
+        for name, value in data.items():
+            if name in attributes:
+                decoded[name] = self.decode_attribute(attributes[name], value)
+            else:
+                decoded[name] = value
+        return cls(**decoded)
 
     def polymorphisize(self, instance_type: Type[AC], data: dict[str, Any]) -> Type[AC]:
         for name, attr in instance_type.get_attributes().items():

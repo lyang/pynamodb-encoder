@@ -1,4 +1,4 @@
-from typing import Any, Type, Union
+from typing import Any
 
 from pynamodb.attributes import (
     Attribute,
@@ -18,9 +18,9 @@ from pynamodb.models import Model
 
 class Encoder:
     def encode(self, instance: Model) -> dict[str, Any]:
-        return self.encode_attributes(instance)
+        return self.encode_container(instance)
 
-    def encode_attributes(self, container: AttributeContainer) -> dict[str, Any]:
+    def encode_container(self, container: AttributeContainer) -> dict[str, Any]:
         encoded = {}
         for name, attr in container.get_attributes().items():
             value = getattr(container, name)
@@ -43,23 +43,24 @@ class Encoder:
             return data
 
     def encode_list(self, attr: ListAttribute, data: list) -> list:
-        return [self.encode_attribute(self.coerce(attr.element_type), value) for value in data]
-
-    def coerce(self, element_type: Union[Type[Attribute], None]) -> Attribute:
-        return (element_type or Attribute)()
+        element_attr = (attr.element_type or Attribute)()
+        return [self.encode_attribute(element_attr, value) for value in data]
 
     def encode_map(self, attr: MapAttribute, data: MapAttribute) -> dict:
         if type(attr) == MapAttribute:
             return {name: data[name] for name in data}
         elif isinstance(attr, DynamicMapAttribute):
-            encoded = {}
-            attributes = attr.get_attributes()
-            for name in data:
-                value = getattr(data, name)
-                if name in attributes:
-                    encoded[name] = self.encode_attribute(attributes[name], value)
-                else:
-                    encoded[name] = value
-            return encoded
+            return self.encode_dynamic_map(attr, data)
         else:
-            return self.encode_attributes(data)
+            return self.encode_container(data)
+
+    def encode_dynamic_map(self, attr: DynamicMapAttribute, data: MapAttribute) -> dict:
+        encoded = {}
+        attributes = attr.get_attributes()
+        for name in data:
+            value = getattr(data, name)
+            if name in attributes:
+                encoded[name] = self.encode_attribute(attributes[name], value)
+            else:
+                encoded[name] = value
+        return encoded
