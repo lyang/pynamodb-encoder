@@ -106,9 +106,9 @@ def test_encode_dynamic_map_attribute(encoder):
         age = NumberAttribute()
         owner = Human()
 
-    pet = Pet(name="Garfield", age=43, owner=Human(name="Jon", occupation="Cartoonist"))
+    pet = Pet(name="Garfield", age=43, owner=Human(name="Jon", job="Cartoonist"))
 
-    assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "owner": {"name": "Jon", "occupation": "Cartoonist"}}
+    assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "owner": {"name": "Jon", "job": "Cartoonist"}}
 
 
 def test_encode_typed_list_attribute(encoder):
