@@ -46,6 +46,8 @@ isort = "^5.10.1"
 pyright = "^0.0.13"
 pytest = "^6.2"
 pytest-cov = "^3.0.0"
+dataclasses = {version = "^0.8", python = "< 3.6"}
+typed-ast = {version = "^1.5.1", python = "< 3.8"}
 
 [tool.pytest.ini_options]
 addopts = [
