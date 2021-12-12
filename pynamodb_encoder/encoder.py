@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict, List
 
 from pynamodb.attributes import (
     Attribute,
@@ -13,10 +13,10 @@ from pynamodb_encoder.primitive_attribute_encoder import PrimitiveAttributeEncod
 
 
 class Encoder:
-    def encode(self, instance: Model) -> dict[str, Any]:
+    def encode(self, instance: Model) -> Dict[str, Any]:
         return self.encode_container(instance)
 
-    def encode_container(self, container: AttributeContainer) -> dict[str, Any]:
+    def encode_container(self, container: AttributeContainer) -> Dict[str, Any]:
         encoded = {}
         for name, attr in container.get_attributes().items():
             value = getattr(container, name)
@@ -32,11 +32,11 @@ class Encoder:
         else:
             return PrimitiveAttributeEncoder.encode(attr, data)
 
-    def encode_list(self, attr: ListAttribute, data: list) -> list:
+    def encode_list(self, attr: ListAttribute, data: List) -> List:
         element_attr = (attr.element_type or Attribute)()
         return [self.encode_attribute(element_attr, value) for value in data]
 
-    def encode_map(self, attr: MapAttribute, data: MapAttribute) -> dict:
+    def encode_map(self, attr: MapAttribute, data: MapAttribute) -> Dict:
         if type(attr) == MapAttribute:
             return {name: data[name] for name in data}
         elif isinstance(attr, DynamicMapAttribute):
@@ -44,7 +44,7 @@ class Encoder:
         else:
             return self.encode_container(data)
 
-    def encode_dynamic_map(self, attr: DynamicMapAttribute, data: MapAttribute) -> dict:
+    def encode_dynamic_map(self, attr: DynamicMapAttribute, data: MapAttribute) -> Dict:
         encoded = {}
         attributes = attr.get_attributes()
         for name in data:
