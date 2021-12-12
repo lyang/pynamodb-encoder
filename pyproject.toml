@@ -24,9 +24,15 @@ src_paths = ["pynamodb_encoder"]
 
 [tool.poetry]
 name = "pynamodb-encoder"
-version = "0.1.0"
 description = "Helper classes that encode/decode pynamodb models to/from JSON serializable dict"
 authors = ["Lin Yang <github@linyang.me>"]
+keywords = ["dynamodb", "pynamodb", "json", "encode", "decode"]
+homepage = "https://github.com/lyang/pynamodb-encoder"
+repository = "https://github.com/lyang/pynamodb-encoder"
+license = "MIT"
+include = ["LICENSE"]
+readme = "README.md"
+version = "0.1.0"
 
 [tool.poetry.dependencies]
 python = "^3.9"
