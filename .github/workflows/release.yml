@@ -29,6 +29,9 @@ jobs:
     - name: Create Release Note
       run: |
         git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * %an <%ae>' --no-merges >> ".github/RELEASE-NOTE.md"
+    - name: Create Package
+      run: |
+        poetry build
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
