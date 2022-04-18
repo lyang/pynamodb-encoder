@@ -46,7 +46,7 @@ isort = "^5.10.1"
 pyright = "^1.1.238"
 pytest = "^7.1"
 pytest-cov = "^3.0.0"
-typed-ast = {version = "^1.5.2", python = "< 3.8"}
+typed-ast = {version = "^1.5.3", python = "< 3.8"}
 pre-commit = "^2.18.1"
 
 [tool.pytest.ini_options]
