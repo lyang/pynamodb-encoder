@@ -20,7 +20,7 @@ class Encoder:
         encoded = {}
         for name, attr in container.get_attributes().items():
             value = getattr(container, name)
-            if value:
+            if value is not None:
                 encoded[name] = self.encode_attribute(attr, value)
         return encoded
 
