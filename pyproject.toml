@@ -39,7 +39,7 @@ python = "^3.7"
 pynamodb = "^5.1.0"
 
 [tool.poetry.dev-dependencies]
-black = "^22.3"
+black = "^22.6"
 coverage = {extras = ["toml"], version = "^6.4"}
 flake8 = "^4.0.1"
 isort = "^5.10.1"
