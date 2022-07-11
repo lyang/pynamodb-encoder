@@ -346,7 +346,7 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pyright"
-version = "1.1.257"
+version = "1.1.258"
 description = "Command line wrapper for pyright"
 category = "dev"
 optional = false
@@ -504,7 +504,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "f1c05ee05f39df8288288b0537293040bb617ee36b69483c34bf0d2345a03ee5"
+content-hash = "6d6f4524d30219f24a9a32dcaa93f1d3dc638ad7fce92bb9242838d018ed4163"
 
 [metadata.files]
 atomicwrites = []
