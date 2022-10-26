@@ -312,7 +312,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "pynamodb"
-version = "5.2.1"
+version = "5.2.3"
 description = "A Pythonic Interface to DynamoDB"
 category = "main"
 optional = false
@@ -674,8 +674,8 @@ pyflakes = [
     {file = "pyflakes-2.5.0.tar.gz", hash = "sha256:491feb020dca48ccc562a8c0cbe8df07ee13078df59813b83959cbdada312ea3"},
 ]
 pynamodb = [
-    {file = "pynamodb-5.2.1-py3-none-any.whl", hash = "sha256:bb93bd86061c91508c44668c219d51d080d011f665153fa9a471ced06b2f2ee7"},
-    {file = "pynamodb-5.2.1.tar.gz", hash = "sha256:c7a9c557b52364bc09257edd00378eebc75258bbdaa0fe050fcce2356149f90a"},
+    {file = "pynamodb-5.2.3-py3-none-any.whl", hash = "sha256:1c3197c276c8c0f24f8adc9ff332d18b18b65af74229ccb5a41497c8ddedde4c"},
+    {file = "pynamodb-5.2.3.tar.gz", hash = "sha256:9601a51e59488b0532e5137d1c970c253e1754abba0e2852422e94b1b7e9a75d"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.6-py3-none-any.whl", hash = "sha256:04ff808a5b90911829c55c4e26f75fa5ca8a2f5f36aa3a51f68e27033341d3e4"},
