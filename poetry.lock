@@ -477,13 +477,13 @@ signals = ["blinker (>=1.3,<2.0)"]
 
 [[package]]
 name = "pyright"
-version = "1.1.314"
+version = "1.1.316"
 description = "Command line wrapper for pyright"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pyright-1.1.314-py3-none-any.whl", hash = "sha256:5008a2e04b71e35c5f1b78b16adae9d012601197442ae6c798e9bb3456d1eecb"},
-    {file = "pyright-1.1.314.tar.gz", hash = "sha256:bd104c206fe40eaf5f836efa9027f07cc0efcbc452e6d22dfae36759c5fd28b3"},
+    {file = "pyright-1.1.316-py3-none-any.whl", hash = "sha256:7259d73287c882f933d8cd88c238ef02336e172171ae95117a963a962a1fed4a"},
+    {file = "pyright-1.1.316.tar.gz", hash = "sha256:bac1baf8567b90f2082ec95b61fc1cb50a68917119212c5608a72210870c6a9a"},
 ]
 
 [package.dependencies]
@@ -721,4 +721,4 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=4.6)", "pytest-black (
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "0fd3966fe047a569802fd1524c12e5d412d7bbd25dda64408bb060b68484d857"
+content-hash = "99946d3a745ca2899473d168cddd9e5d5a1e7b090f3ce7b97f91f6eb051daf14"
