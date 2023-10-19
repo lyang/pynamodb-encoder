@@ -43,7 +43,7 @@ black = "^23.3"
 coverage = {extras = ["toml"], version = "^7.2"}
 flake8 = "^5.0.4"
 isort = "^5.11.5"
-pyright = "^1.1.331"
+pyright = "^1.1.332"
 pytest = "^7.4"
 pytest-cov = "^4.1.0"
 typed-ast = {version = "^1.5.5", python = "< 3.8"}
