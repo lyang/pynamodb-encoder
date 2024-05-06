@@ -409,17 +409,18 @@ files = [
 
 [[package]]
 name = "pynamodb"
-version = "5.5.1"
+version = "6.0.0"
 description = "A Pythonic Interface to DynamoDB"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "pynamodb-5.5.1-py3-none-any.whl", hash = "sha256:6aa659c11d4a8a18ef2d75392a08828d45ab9eefb9638871d455929a52d66fc3"},
-    {file = "pynamodb-5.5.1.tar.gz", hash = "sha256:b9d9a59afd9edbc3db63a267e67db764831f277477ae744ed4febb778ef1a098"},
+    {file = "pynamodb-6.0.0-py3-none-any.whl", hash = "sha256:7217f87b6e5c9866d915265fd462fa4a012b37b0149bf1f814b33100b50e901f"},
+    {file = "pynamodb-6.0.0.tar.gz", hash = "sha256:05b3aa02021050393e0667944a20af3da60f55984de86126786844c2d47b9a18"},
 ]
 
 [package.dependencies]
 botocore = ">=1.12.54"
+typing-extensions = {version = ">=4", markers = "python_version < \"3.11\""}
 
 [package.extras]
 signals = ["blinker (>=1.3,<2.0)"]
@@ -661,4 +662,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "87ab93837e2d23af883b14a5c2996adabbf40b66e08375f371590692ac55a86f"
+content-hash = "fc7cfdee5a8c9706242a948ae7a443195cacf245b905d7245265b2f388d7966e"
