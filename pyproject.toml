@@ -49,7 +49,6 @@ pyright = "^1.1.360"
 coverage = {extras = ["toml"], version = "^7.2"}
 pytest = ">=7.4,<9.0"
 pytest-cov = ">=4.1,<6.0"
-py = "^1.11.0"
 
 [tool.pytest.ini_options]
 addopts = [
