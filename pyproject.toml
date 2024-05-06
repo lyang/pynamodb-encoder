@@ -38,16 +38,18 @@ version = "0.1.2"
 python = "^3.8"
 pynamodb = "^5.1.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^24.3"
-coverage = {extras = ["toml"], version = "^7.2"}
 flake8 = "^5.0.4"
 isort = "^5.11.5"
+pre-commit = "^2.21.0"
 pyright = "^1.1.360"
+
+[tool.poetry.group.test.dependencies]
+coverage = {extras = ["toml"], version = "^7.2"}
 pytest = "^7.4"
 pytest-cov = "^4.1.0"
-typed-ast = {version = "^1.5.5", python = "< 3.8"}
-pre-commit = "^2.21.0"
+py = "^1.11.0"
 
 [tool.pytest.ini_options]
 addopts = [
