@@ -54,7 +54,7 @@ def test_decode_binary_attribute(decoder: Decoder):
     class Pet(Model):
         name = UnicodeAttribute()
         age = NumberAttribute()
-        weight = BinaryAttribute()
+        weight = BinaryAttribute(legacy_encoding=True)
 
     pet = decoder.decode(Pet, {"name": "Garfield", "age": 43, "weight": "KA=="})
 
@@ -224,8 +224,8 @@ def test_decode_complex_model(decoder: Decoder):
 
 def test_decode_all_primitive_types(decoder: Decoder):
     class Foo(Model):
-        binary = BinaryAttribute()
-        binary_set = BinarySetAttribute()
+        binary = BinaryAttribute(legacy_encoding=True)
+        binary_set = BinarySetAttribute(legacy_encoding=True)
         boolean = BooleanAttribute()
         json = JSONAttribute()
         number = NumberAttribute()

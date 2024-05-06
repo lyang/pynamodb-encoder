@@ -36,7 +36,7 @@ version = "0.1.2"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pynamodb = "^5.1.0"
+pynamodb = "^6.0.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.3"

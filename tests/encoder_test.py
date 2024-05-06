@@ -53,11 +53,11 @@ def test_encode_binary_attribute(encoder):
     class Pet(Model):
         name = UnicodeAttribute()
         age = NumberAttribute()
-        weight = BinaryAttribute()
+        weight = BinaryAttribute(legacy_encoding=True)
 
     pet = Pet(name="Garfield", age=43, weight=bytes([40]))
 
-    assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "weight": "KA=="}
+    assert encoder.encode(pet) == {"name": "Garfield", "age": 43, "weight": b"KA=="}
 
 
 def test_encode_list_attribute(encoder):
@@ -180,8 +180,8 @@ def test_encode_complex_model(encoder):
 
 def test_encode_all_primitive_types(encoder):
     class Foo(Model):
-        binary = BinaryAttribute()
-        binary_set = BinarySetAttribute()
+        binary = BinaryAttribute(legacy_encoding=True)
+        binary_set = BinarySetAttribute(legacy_encoding=True)
         boolean = BooleanAttribute()
         json = JSONAttribute()
         number = NumberAttribute()
@@ -208,8 +208,8 @@ def test_encode_all_primitive_types(encoder):
     )
 
     assert encoder.encode(foo) == {
-        "binary": "AA==",
-        "binary_set": ["AA=="],
+        "binary": b"AA==",
+        "binary_set": [b"AA=="],
         "boolean": True,
         "json": json.dumps({"key": "value"}),
         "number": 1,
