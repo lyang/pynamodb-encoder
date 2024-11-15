@@ -31,7 +31,7 @@ jobs:
       run: |
         tox
     - name: Report test coverage
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: tests/reports/coverage/cobertura.xml
