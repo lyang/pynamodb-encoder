@@ -37,7 +37,7 @@ class Encoder:
         return [self.encode_attribute(element_attr, value) for value in data]
 
     def encode_map(self, attr: MapAttribute, data: MapAttribute) -> Dict:
-        if type(attr) == MapAttribute:
+        if type(attr) is MapAttribute:
             return {name: data[name] for name in data}
         elif isinstance(attr, DynamicMapAttribute):
             return self.encode_dynamic_map(attr, data)

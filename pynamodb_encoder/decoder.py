@@ -43,7 +43,7 @@ class Decoder:
         return (element_type or Attribute)()
 
     def decode_map(self, attr: MapAttribute, data: Dict[str, Any]):
-        if type(attr) == MapAttribute:
+        if type(attr) is MapAttribute:
             return data
         elif isinstance(attr, DynamicMapAttribute):
             return self.decode_dynamic_map(attr, data)
