@@ -39,7 +39,7 @@ python = "^3.9"
 pynamodb = "^6.0.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.3"
+black = ">=24.3,<26.0"
 flake8 = ">=5.0.4,<8.0.0"
 isort = ">=5.11.5,<7.0.0"
 pre-commit = ">=2.21,<5.0"
