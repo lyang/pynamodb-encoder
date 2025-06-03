@@ -444,14 +444,14 @@ files = [
 
 [[package]]
 name = "pynamodb"
-version = "6.0.2"
+version = "6.1.0"
 description = "A Pythonic Interface to DynamoDB"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
 files = [
-    {file = "pynamodb-6.0.2-py3-none-any.whl", hash = "sha256:12befe0ed8132b6d77b9212c0af9c894977443ef826b60fe5ef185c2f2f4126b"},
-    {file = "pynamodb-6.0.2.tar.gz", hash = "sha256:a85ea1ee42d6cb53128ec910507406e7901532f605d28e2680016e25bcbd6828"},
+    {file = "pynamodb-6.1.0-py3-none-any.whl", hash = "sha256:9c0f1a0f177208640b2336ed56c557c5187b0012d356e9c7399c3923c5f93c7f"},
+    {file = "pynamodb-6.1.0.tar.gz", hash = "sha256:c7d09700ace9f428e67ecf73fa867633c632de3acf402b2c7c136be695afda79"},
 ]
 
 [package.dependencies]
